@@ -83,7 +83,7 @@
 
 **题目：**
 
-![1651029231822790](https://raw.githubusercontent.com/tiansy9981/images/master/1651029231822790-1680400486984-2.png?token=AEL2C65CDBAXW5YEIBDACK3F62EGQ)
+![1651029231822790](https://raw.githubusercontent.com/tiansy9981/pictuer/master/1651029231822790-1680400486984-2.png)
 
 **解题思路：**
 
@@ -130,7 +130,7 @@ kubectl config use-context k8s
 
 **题目：**
 
-![8eaafb333008b96b43b94ef4355ee39.png](https://raw.githubusercontent.com/tiansy9981/images/master/1651029556391018-1680400497304-6.png?token=AEL2C66IKLVRWXBG74UPJM3F62DEA)
+![8eaafb333008b96b43b94ef4355ee39.png](https://raw.githubusercontent.com/tiansy9981/pictuer/master/1651029556391018-1680400497304-6.png)
 
 **解题思路：**
 
@@ -150,7 +150,7 @@ kubectl config use-context k8s
 
 **题目：**
 
-![image-20230402075653347](https://raw.githubusercontent.com/tiansy9981/images/master/image-20230402075653347-1680400503498-9.png?token=AEL2C63TW7MJ36S65VLSZH3F62DQG)
+![image-20230402075653347](https://raw.githubusercontent.com/tiansy9981/pictuer/master/image-20230402075653347-1680400503498-9.png)
 
 **解题思路：**
 
@@ -203,7 +203,7 @@ kubectl config use-context k8s
 
 **题目：**
 
-![3d4b0ff3325346d94f7672354ed4d6d.png](https://raw.githubusercontent.com/tiansy9981/images/master/1651029724653120.png?token=AEL2C63DMJYQGRHSGXHFWQTF62DQU)
+![3d4b0ff3325346d94f7672354ed4d6d.png](https://raw.githubusercontent.com/tiansy9981/pictuer/master/1651029724653120.png)
 
 **解题思路：**
 
@@ -234,7 +234,7 @@ kubectl config use-context k8s
 
 **题目：**
 
-![image.png](https://raw.githubusercontent.com/tiansy9981/images/master/1651029880274262.png?token=AEL2C6YKDUY5M37LEEG5GA3F62DRU)
+![image.png](https://raw.githubusercontent.com/tiansy9981/pictuer/master/1651029880274262.png)
 
 **解题思路：**
 
@@ -282,7 +282,7 @@ kubectl config use-context k8s
 
 **题目：**
 
-![b66fc3d0618f109ec20f637b53b5364.png](https://raw.githubusercontent.com/tiansy9981/images/master/1651031005707174.png?token=AEL2C62V6YPPTX66B4O2PULF62DTE)
+![b66fc3d0618f109ec20f637b53b5364.png](https://raw.githubusercontent.com/tiansy9981/pictuer/master/1651031005707174.png)
 
 **解题思路：**
 
@@ -313,7 +313,7 @@ kubectl config use-context k8s
 
 **题目：**
 
-![image-20230402075623576](https://raw.githubusercontent.com/tiansy9981/images/master/image-20230402075623576.png?token=AEL2C63K3ALIUK4V4BGR5GLF62DTU)
+![image-20230402075623576](https://raw.githubusercontent.com/tiansy9981/pictuer/master/image-20230402075623576.png)
 
 **解题思路：**
 
@@ -421,7 +421,7 @@ kubectl config use-context k8s
 
 **题目：**
 
-![a1354d92b164d1922250681434e4c55.png](https://raw.githubusercontent.com/tiansy9981/images/master/1651045196697423.png?token=AEL2C65GXQYXGPIAFB3HA73F62DUA)
+![a1354d92b164d1922250681434e4c55.png](https://raw.githubusercontent.com/tiansy9981/pictuer/master/1651045196697423.png)
 
 **解题思路：**
 
@@ -443,7 +443,7 @@ kubectl config use-context k8s
 
 **题目：**
 
-![cfcaf31a4a34aeab56223e383b9a6f7.png](https://raw.githubusercontent.com/tiansy9981/images/master/1651048576121439.png?token=AEL2C64FA3MM37AACIPT6MLF62DUQ)
+![cfcaf31a4a34aeab56223e383b9a6f7.png](https://raw.githubusercontent.com/tiansy9981/pictuer/master/1651048576121439.png)
 
 **解题思路：**
 
@@ -475,7 +475,7 @@ kubectl config use-context k8s
 
 **题目：**
 
-![110ee505fb8dfe2e058f7540ee31069.png](https://raw.githubusercontent.com/tiansy9981/images/master/1651048731969789.png?token=AEL2C6644OSUMRMMAPZHANDF62DU4)
+![110ee505fb8dfe2e058f7540ee31069.png](https://raw.githubusercontent.com/tiansy9981/pictuer/master/1651048731969789.png)
 
 **解题思路：**
 
@@ -503,7 +503,7 @@ kubectl config use-context k8s
 
 **题目：**
 
-![image.png](https://raw.githubusercontent.com/tiansy9981/images/master/1651048877140198.png?token=AEL2C63QGFRC76AAQ7I5J6DF62DVK)
+![image.png](https://raw.githubusercontent.com/tiansy9981/pictuer/master/1651048877140198.png)
 
 **解题思路：**
 
@@ -535,7 +535,7 @@ kubectl apply -f 12.yaml
 
 **题目：**
 
-![image.png](https://raw.githubusercontent.com/tiansy9981/images/master/1651048951917070.png?token=AEL2C6YVIN535MOI6KL4GZTF62DV4)
+![image.png](https://raw.githubusercontent.com/tiansy9981/pictuer/master/1651048951917070.png)
 
 **解题思路：**
 
@@ -564,7 +564,7 @@ kubectl apply -f 13.yaml
 
 **题目：**
 
-![76e66803749578b38271bb65896170a.png](https://raw.githubusercontent.com/tiansy9981/images/master/1651049023128524.png?token=AEL2C6ZRXV7GAYQCAVEMFXLF62DWK)
+![76e66803749578b38271bb65896170a.png](https://raw.githubusercontent.com/tiansy9981/pictuer/master/1651049023128524.png)
 
 **解题思路：**
 
@@ -610,7 +610,7 @@ kubectl edit pvc pv-volume  --record  #将10Mi改为70Mi
 
 题目：
 
-![f79d5437b2afd6d912d8b5f6460ac1a.png](https://raw.githubusercontent.com/tiansy9981/images/master/1651049091558016.png?token=AEL2C6YMTHX2JMDDGKCDUUDF62DWY)
+![f79d5437b2afd6d912d8b5f6460ac1a.png](https://raw.githubusercontent.com/tiansy9981/pictuer/master/1651049091558016.png)
 
 **解题思路：**
 
@@ -624,7 +624,7 @@ kubectl logs foobar |grep unable-access-website  > /opt/KUTR00101/foobar
 
 **题目：**
 
-![c7b9da9b901adbbfd137566842adb92.png](https://raw.githubusercontent.com/tiansy9981/images/master/1651049134304598-1680400554548-36.png?token=AEL2C634FMYGE4QXEJBQJ4DF62DXI)
+![c7b9da9b901adbbfd137566842adb92.png](https://raw.githubusercontent.com/tiansy9981/pictuer/master/1651049134304598-1680400554548-36.png)
 
 **解题思路：**
 
@@ -688,7 +688,7 @@ kubectl logs foobar |grep unable-access-website  > /opt/KUTR00101/foobar
 
 **题目：**
 
-![4b981c2f7728c83d65ae63f9ad34a7b.png](https://raw.githubusercontent.com/tiansy9981/images/master/1651049185364958-1680400551383-34.png?token=AEL2C6332Z6NUC324QWNFADF62DXW)
+![4b981c2f7728c83d65ae63f9ad34a7b.png](https://raw.githubusercontent.com/tiansy9981/pictuer/master/1651049185364958-1680400551383-34.png)
 
 **解题思路：**
 
@@ -703,7 +703,7 @@ kubectl top pod -l name=cpu-user --sort-by=cpu -A
 
 **题目：**
 
-![3e082262bd5ebda4e4e632e82878363.png](https://raw.githubusercontent.com/tiansy9981/images/master/1651049439141942.png?token=AEL2C65MEELM5UUVRFMIURDF62DYE)
+![3e082262bd5ebda4e4e632e82878363.png](https://raw.githubusercontent.com/tiansy9981/pictuer/master/1651049439141942.png)
 
 **解题思路：**
 
