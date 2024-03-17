@@ -83,7 +83,7 @@
 
 **题目：**
 
-![1651029231822790](./assets/1651029231822790-1680400486984-2.png)
+![1651029231822790](https://raw.githubusercontent.com/tiansy9981/images/master/1651029231822790-1680400486984-2.png?token=AEL2C65CDBAXW5YEIBDACK3F62EGQ)
 
 **解题思路：**
 
