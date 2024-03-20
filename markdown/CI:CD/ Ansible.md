@@ -206,6 +206,28 @@ north-america:
 
 在指定 inventory 文件时可以使用-i  PathName或者--inventory PathName参数指定对应的 inventory 单个文件或**文件夹**。查看对应的组内主机后者验证 inventory 文件可使用--list-hosts 命令查看，例如 ansible all -i inventory  all --list-hosts
 
+### 2.3  定义主机的高级用法
+
+前面提到了使用 inventory 定义管理主机与主机组以及在 playbook 中定义 hosts 的基本使用方法，在高级方法中，我们将指出基本方法的一些不便指出，以至于提示日常使用时的便利性以及减少错误的可能性。
+
+在 inventory 中，我们常常会通过主机名或者域名的方式去定义管理主机，这本身是一种不错的方式，但是由于主机名或者域名本身与实际管理主机存在一定的解析关系，一旦这个解析关系发生错乱，会导致使用 ansible 时执行的指定执行到其他非被管理主机或者无法被执行的问题。所以为了避免这种问题的产生，尽量在本机记录好对应的解析关系，例如在 hosts 文件中记录对应的解析关系或者在主机参数host*vars中定义好解析关系。建议定在主机参数 host*vars中。对于主机名存在特殊字符的，建议对主机名使用单引号，进行字符转移。
+
+在执行 playbook 时，需要指定执行的管理主机 hosts，我们常常使用主机组或者主机名，在 playbook 中，**hosts 支持通配符的引入**。例如有三个主机： data1、data2、data3，我们可以使用 data*表示这三个主机，而不需要分别写完整这三个主机名称，当然你可以将这三个主机引入到一个组方便引用。同时主机组也可以使用通配符。在 hosts 中，使用逗号作为主机或者主机组的分割符。
+
+**在 playbook 的 hosts 中除了可以使用通配符以外还可以使用逻辑符&与！.&表示交集的关系；**！表示非的关系。例如主机组 a 里面有 1,2,3,4这几个主机，而 b 里面有 1,2,5,6这几个主机，a，&b 或者&a，b 表示的是主机 1,2。同时 a,!2表示在 a 主机组中排除 2 这个主机。all,!a表示所有主机排除主机组a 在内的所有主机。
+
+### 2.4 创建动态 inventory
+
+静态 inventory 文件适合管理那种小规模的集群，一旦管理主机的规模上来了，达到成千上万台，通过手动去写静态的 inventory 文件已经显得不太现实。所以获取动态的 inventory 文件就显得非常有必要了。
+
+获取动态 inventory 是通过脚本去获取的，需要在 `ansible.cfg` 文件中配置 `inventory = inventory` 参数，或者ansible-playbook使用-i参数指定**可执行**的inventory文件。官网动态inventory脚步请见：[https://github.com/ansible/ansible/tree/mazer*role*loader/contrib](https://github.com/ansible/ansible/tree/mazer_role_loader/contrib)或https://docs.ansible.com/ansible/latest/dev_guide/index.html
+
+**自定义动态inventory**
+
+动态inventory的程序可以使用任何语言，最终生成的inventory将是JSON格式的。通过使用ansible-inventory命令可以了解Ansible的inventory的JSON格式要求。
+
+
+
 ## 3. ad hoc 命令
 
 基本用法：
@@ -225,71 +247,7 @@ ansible-doc -t lookup -l  #查看此模块有哪些插件
 ansible-doc -t lookup dict #查看此模块的具体插件用法**
 ```
 
-## 4. playbook
-
-### 4.1 playbook 基本写法：
-
-```yaml
----
-- name:  #名称描述
-  hosts:  #主机或者主机组
-  tasks:
-   - name: #任务描述
-     user: #模块名称
-       name: newbie
-       uid: 4000
-       state: present  #模块参数以及期望值
-```
-
->在 yaml 文件中只有空格被允许，tab键制表符在 yaml 是被禁止使用的。如果您使用vi文本编辑器，您可以应用一些设置，这可能会使编辑剧本更容易。它会在按Tab键时执行2个空格的缩进，并自动缩进后续行。在$HOME/.vimrc文件中添加
->autocmd FileType yaml setlocal ai ts=2 sw=2 et
-
-playbook 采用的是声明式yaml 格式文件，playbook 是一系列key-value 键值对的集合，在相同的结构下采用相同的缩进。在官方的声明方式中，playbook 包含 name、hosts、task。这三个 key 保持相同的缩进。其中 name 的key 值是可选的，尽管是可选的，但是建议使用，它可以声明这个 playbook 的目的，有助于记录并更容易地监视剧本的执行进度。
-
-在 playbook 中可以包含多个 play，在play中又可以包含多个task ，task 执行是按顺执行的。
-
-配置ansible-playbook执行的输出长度，参数如下：
-
-| OPTION | DESCRIPTION                                                  |
-| ------ | ------------------------------------------------------------ |
-| -v     | The task results are displayed.                              |
-| -vv    | Both task results and task configuration are displayed       |
-| -vvv   | Includes information about connections to managed hosts      |
-| -vvvv  | Adds extra verbosity options to the connection plug-ins, including users being used in the managed hosts to execute scripts, and what scripts have been executed |
-
-### 4.2 ansible-playbook 语法检查与 dry run以及troubleshooting：
-
-```bash
-ansible-playbook --syntax-check webserver.yml
-```
-
-ansible-playbook 的 dry run:
-
-```bash
-ansible-playbook -C webserver.yml
-ansible-playbook --check webserver.yml
-```
-
-> **==当task中指定check_mode: no时，运行check时，会执行task。==**
-
-ansible-playbook的setup以及start-at-task
-
-```
-ansible-playbook play.yml --step
-ansible-playbook play.yml --start-at-task="start httpd service"
-```
-
-**其他测试模块：**
-
-| name   | description                                                  |
-| ------ | ------------------------------------------------------------ |
-| uri    | 与HTTP和HTTPS web服务交互，支持摘要、基本和WSSE HTTP身份验证机制。对于Windows目标，请使用[win_uri]模块。 |
-| script | ' script'模块接受脚本名称后跟以空格分隔的参数列表。自由格式命令或' cmd'参数都是必需的，参见示例。路径处的本地脚本将被传输到远程节点，然后执行。将通过远程节点上的shell环境处理给定的脚本。这个模块不需要远程系统上的python，就像[raw]模块一样。该模块也支持Windows目标。 |
-| assert | 该模块使用可选的自定义消息断言给定表达式为真。该模块也支持Windows目标。 |
-
-
-
-### 4.3 常见的模块
+### 3.1常见的模块
 
 模块由上游社区开发，同时这些模块可能处在不同的开发阶段。在使用过程中注意模块的开发状态十分有必要。模块有以下几种开发状态（status）：
 
@@ -460,6 +418,76 @@ community：核心上游开发人员、合作伙伴或公司不支持的模块�
 | haproxy            |      |
 
 > **在 playbook 中尽量避免使用command, shell, raw模块，尽管它们实现功能十分简单，但是它们容易造成非幂等效果。**
+
+## 4. playbook
+
+为什么有了ad-hoc以后还需要使用playbook呢？因为ad-hoc执行命令时，书写不清晰，难易更改或者对执行的命令难易审核。通过使用playbook，将命令代码化，方便可读、审核、版本管理等优势。
+
+### 4.1 playbook的构成：
+
+playbook是由一个或以上的task构成的。
+
+### 4.2 playbook 基本写法：
+
+```yaml
+---
+- name:  #名称描述
+  hosts:  #主机或者主机组
+  tasks:
+   - name: #任务描述
+     user: #模块名称
+       name: newbie
+       uid: 4000
+       state: present  #模块参数以及期望值
+```
+
+>在 yaml 文件中只有空格被允许，tab键制表符在 yaml 是被禁止使用的。如果您使用vi文本编辑器，您可以应用一些设置，这可能会使编辑剧本更容易。它会在按Tab键时执行2个空格的缩进，并自动缩进后续行。在$HOME/.vimrc文件中添加
+>autocmd FileType yaml setlocal ai ts=2 sw=2 et
+
+playbook 采用的是声明式yaml 格式文件，playbook 是一系列key-value 键值对的集合，在相同的结构下采用相同的缩进。在官方的声明方式中，playbook 包含 name、hosts、task。这三个 key 保持相同的缩进。其中 name 的key 值是可选的，尽管是可选的，但是建议使用，它可以声明这个 playbook 的目的，有助于记录并更容易地监视剧本的执行进度。
+
+在 playbook 中可以包含多个 play，在play中又可以包含多个task ，task 执行是按顺执行的。
+
+配置ansible-playbook执行的输出长度，参数如下：
+
+| OPTION | DESCRIPTION                                                  |
+| ------ | ------------------------------------------------------------ |
+| -v     | The task results are displayed.                              |
+| -vv    | Both task results and task configuration are displayed       |
+| -vvv   | Includes information about connections to managed hosts      |
+| -vvvv  | Adds extra verbosity options to the connection plug-ins, including users being used in the managed hosts to execute scripts, and what scripts have been executed |
+
+### 4.3 ansible-playbook 语法检查与 dry run以及troubleshooting：
+
+```bash
+ansible-playbook --syntax-check webserver.yml
+```
+
+ansible-playbook 的 dry run:
+
+```bash
+ansible-playbook -C webserver.yml
+ansible-playbook --check webserver.yml
+```
+
+> **==当task中指定check_mode: no时，运行check时，会执行task。==**
+
+ansible-playbook的setup以及start-at-task
+
+```
+ansible-playbook play.yml --step
+ansible-playbook play.yml --start-at-task="start httpd service"
+```
+
+**其他测试模块：**
+
+| name   | description                                                  |
+| ------ | ------------------------------------------------------------ |
+| uri    | 与HTTP和HTTPS web服务交互，支持摘要、基本和WSSE HTTP身份验证机制。对于Windows目标，请使用[win_uri]模块。 |
+| script | ' script'模块接受脚本名称后跟以空格分隔的参数列表。自由格式命令或' cmd'参数都是必需的，参见示例。路径处的本地脚本将被传输到远程节点，然后执行。将通过远程节点上的shell环境处理给定的脚本。这个模块不需要远程系统上的python，就像[raw]模块一样。该模块也支持Windows目标。 |
+| assert | 该模块使用可选的自定义消息断言给定表达式为真。该模块也支持Windows目标。 |
+
+
 
 ### 4.4 yaml 的用法说明
 
@@ -1212,6 +1240,14 @@ fail模块为task提供明确的失败消息。这种方法还支持延迟故障
 
 **always**：定义不管在运行在block或rescue中的task是否正常运行，都会运行的task。具体流程描述：首先运行block中的task，如果全部正常运行，则不会运行rescue中的task。如果block中存在某一个task不能正常运行，再运行rescue中的task。最后不过block中的task是否都能正常运行，或者rescue中的task是否也能全部正常运行，都需要运行always中的task。同时block、rescue、always逻辑块还是遵循task失败后退出执行，不会继续执行块中之后的task的逻辑。
 
+### 6.6执行控制
+
+pre-task：
+
+post-task：
+
+
+
 ## 7. ansible对管理主机的文件操作
 
 ### 7.1 常见文件操作的模块
@@ -1322,29 +1358,9 @@ jinja2 同时也是可以使用条件判断，使用关键字if来标识条件�
 {% endif %}
 ```
 
-# 六. ansible 的进阶用法
 
-## 1. 定义主机的高级用法
 
-前面提到了使用 inventory 定义管理主机与主机组以及在 playbook 中定义 hosts 的基本使用方法，在高级方法中，我们将指出基本方法的一些不便指出，以至于提示日常使用时的便利性以及减少错误的可能性。
-
-在 inventory 中，我们常常会通过主机名或者域名的方式去定义管理主机，这本身是一种不错的方式，但是由于主机名或者域名本身与实际管理主机存在一定的解析关系，一旦这个解析关系发生错乱，会导致使用 ansible 时执行的指定执行到其他非被管理主机或者无法被执行的问题。所以为了避免这种问题的产生，尽量在本机记录好对应的解析关系，例如在 hosts 文件中记录对应的解析关系或者在主机参数host*vars中定义好解析关系。建议定在主机参数 host*vars中。对于主机名存在特殊字符的，建议对主机名使用单引号，进行字符转移。
-
-在执行 playbook 时，需要指定执行的管理主机 hosts，我们常常使用主机组或者主机名，在 playbook 中，**hosts 支持通配符的引入**。例如有三个主机： data1、data2、data3，我们可以使用 data*表示这三个主机，而不需要分别写完整这三个主机名称，当然你可以将这三个主机引入到一个组方便引用。同时主机组也可以使用通配符。在 hosts 中，使用逗号作为主机或者主机组的分割符。
-
-**在 playbook 的 hosts 中除了可以使用通配符以外还可以使用逻辑符&与！.&表示交集的关系；**！表示非的关系。例如主机组 a 里面有 1,2,3,4这几个主机，而 b 里面有 1,2,5,6这几个主机，a，&b 或者&a，b 表示的是主机 1,2。同时 a,!2表示在 a 主机组中排除 2 这个主机。all,!a表示所有主机排除主机组a 在内的所有主机。
-
-## 2. 创建动态 inventory
-
-静态 inventory 文件适合管理那种小规模的集群，一旦管理主机的规模上来了，达到成千上万台，通过手动去写静态的 inventory 文件已经显得不太现实。所以获取动态的 inventory 文件就显得非常有必要了。
-
-获取动态 inventory 是通过脚本去获取的，需要在 `ansible.cfg` 文件中配置 `inventory = inventory` 参数，或者ansible-playbook使用-i参数指定**可执行**的inventory文件。官网动态inventory脚步请见：[https://github.com/ansible/ansible/tree/mazer*role*loader/contrib](https://github.com/ansible/ansible/tree/mazer_role_loader/contrib)或https://docs.ansible.com/ansible/latest/dev_guide/index.html
-
-**自定义动态inventory**
-
-动态inventory的程序可以使用任何语言，最终生成的inventory将是JSON格式的。通过使用ansible-inventory命令可以了解Ansible的inventory的JSON格式要求。
-
-## 3. Ansible并行支持
+## 8. Ansible并行支持
 
 理论上，Ansible能支持inventory文件中所有的主机连接，但对于大量被管理主机而言，这将加重控制主机的负担。Ansible可控制最大同时连接数，由Ansible配置文件中的forks参数控制，默认forks为5。如果task将是在被管理主机运行的Linux主机，且管理主机负载降低的情况下，可用适当的调高forks的值，接近100，将会看到性能的提升。如果被管理主机为router或者Switch，建议降低forks的值。调整默认forks的值除了在ansible.cfg中修改以外，还支持在ansible-playbook命令中添加-f或者--forks参数去设置对应的值。
 
@@ -1356,7 +1372,7 @@ jinja2 同时也是可以使用条件判断，使用关键字if来标识条件�
 ---
 - name: Rolling update
   hosts: webservers
-serial: 2
+  serial: 2
   tasks:
   - name: latest apache httpd package is installed
     yum:
@@ -1370,7 +1386,7 @@ serial: 2
       state: restarted
 ```
 
-## 4.playbook重用
+## 9.playbook重用
 
 通常在大型项目中，会存在多个playbook存在不同的作用。可通过指定import_playbook指令允许将包含playbook列表的外部文件导入playbook。main playbook也会按照它们将被导入并按顺序运行。
 
@@ -1414,13 +1430,13 @@ serial: 2
 | With playbooks 与剧本                 |                  No 没有`include_playbook`                   |          Can import full playbooks可以导入完整剧本           |
 | With variables files 使用变量文件     |         Can include variables files可以包含变量文件          |      Use `vars_files:` to import variables 用于导入变量      |
 
-## 5**.Ansible Role**
+## 10**.Ansible Role**
 
-### 5.1 什么是role
+### 10.1 什么是role
 
 ansible role是一个包含playbook、var、task等==**资源**==的一个==**复用**==的==**集合**==。
 
-### 5.2 role的结构
+### 10.2 role的结构
 
 ```
 [user@host roles]$ tree user.example user.example/
@@ -1457,7 +1473,7 @@ ansible role是一个包含playbook、var、task等==**资源**==的一个==**�
 
 > 不是所有的role都会包含上述目录结构！
 
-### 5.3 如何管理role
+### 10.3 如何管理role
 
 ansible role的管理是通过ansible-galaxy命令实现的。
 
@@ -1483,7 +1499,7 @@ ansible-galaxy role list
 ansible-galaxy role  info
 ```
 
-### 5.4 定义role
+### 10.4 定义role
 
 **定义参数与默认值**
 
@@ -1493,7 +1509,7 @@ role的参数的定义是创建**vars/main.yml**的文件，在此文件中以�
 
 role不能包含一些隐私数据，因为role是复用的，所以为了安全考虑，role中不能包含隐私数据。如果需要使用隐私数据，需要采用其他方式，例如ansible-vault encrypt 加密数据。
 
-### 5.5 在playbook中使用role
+### 10.5 在playbook中使用role
 
 在playbook中使用role是非常简单的，如下：
 
@@ -1544,7 +1560,7 @@ linux-system-roles.vpn
 
 获取其他role可通过访问https://galaxy.ansible.com/ui/获得或使用ansible-galaxy search ** --platforms ** 指定对应名称和平台获取。
 
-### 5.6 执行顺序控制
+### 10.6 执行顺序控制
 
 在playbook中role具有最高优先级，而在一些情况下，有一些task需要执行在role之前，同时有需要有部分task执行在正常task之后。所有引进了**pre_tasks**、**post_tasks**。整体的执行顺序为： **pre_tasks**, **roles**, **tasks**, **post_tasks**、 **handlers**。示例如下：
 
