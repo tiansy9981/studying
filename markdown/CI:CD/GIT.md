@@ -19,3 +19,82 @@ Git是开源的分布式的管理系统，是由Linux之父——Linus开发的�
 5. 完整性；Git使用哈希值来标识版本，每一次提交的代码都会计算一个唯一的哈希值，保证了版本的完整性和可追溯性并追踪版本的改变；-------一致性哈希算法
 6. 缓存机制：Git引入了缓存机制，将文件的变化在内存中暂存，只有在需要提交时才会写入磁盘，大大提高了文件的读写效率。-------stage
 
+## 三、 git的基本概念与操作
+
+在Git中，根据工作区域可分为：工作目录、暂存区、git仓库、远程仓库；
+
+1. 工作目录：顾名思义就是本地工作的目录，可对本地文件操作跟记录的位置；
+2. 暂存区：对工作区已修改的文件，存放提交快照的区域；
+3. 仓库：存放文件元数据的位置，其中元数据包含文件以及版本信息等；
+
+![image-20240321180229680](https://raw.githubusercontent.com/tiansy9981/pictuer/master/image-20240321180229680.png)
+
+**在git中文件有三种状态**：
+
+1. 修改modified：已经更改了文件，但尚未将其提交到数据库。
+2. 阶段中staged：已经在当前版本中标记了已修改的文件，以便将其放入下一次提交快照中。
+3. 提交committed：表示数据安全地存储在本地数据库中。
+
+**工作目录的文件生命周期有：untracked、unmodified、modified、staged**
+
+![image-20240321215213847](https://raw.githubusercontent.com/tiansy9981/pictuer/master/image-20240321215213847.png)
+
+如何获取文件的状态呢？通过git status命令即可获取git中文件的状态。
+
+```bash
+ $ git status
+  On branch master
+  Your branch is up-to-date with 'origin/master'.
+  nothing to commit, working tree clean
+```
+
+以上表示本地工作树master分支中的文件跟仓库master分支的文件版本一致，未做修改；
+
+如果增加一个新的文件，如下：
+
+```bash
+$ echo 'My Project' > README
+  $ git status
+  On branch master
+  Your branch is up-to-date with 'origin/master'.
+  Untracked files:
+    (use "git add <file>..." to include in what will be committed)
+      README
+  nothing added to commit but untracked files present (use "git add" to track)
+
+```
+
+增加了一个新的文件README，通过git status命令会提示文件在当前分支中未被追踪（当前分支的仓库以及暂存区没有此文件）。可使用git add 追踪文件，即提交至暂存区。
+
+此时再通过输入git status，提示new file。Changes to be committed表示文件已经被追踪以及被记录到暂存区等待被提交。
+
+```bash
+ $ git status
+  On branch master
+  Your branch is up-to-date with 'origin/master'.
+  Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+      new file:   README
+```
+
+当修改一个已被追踪的文件时，modified文件已在工作目录中修改，Changes not staged for commit表示尚未暂存并提交。可通过git add将修改的文件提交暂存区
+
+```bash
+$ git status
+  On branch master
+  Your branch is up-to-date with 'origin/master'.
+  Changes to be committed:
+    (use "git reset HEAD <file>..." to unstage)
+      new file:   README
+  Changes not staged for commit:
+    (use "git add <file>..." to update what will be committed)
+    (use "git checkout -- <file>..." to discard changes in working directory)
+      modified:   CONTRIBUTING.md
+```
+
+通过以上可知，git add命令能跟踪新文件，暂存文件，后面将分支中讲解它能做其他事情，如将合并冲突的文件标记为已解决。
+
+
+
+
+
