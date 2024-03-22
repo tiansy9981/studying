@@ -2,7 +2,7 @@
 
 ## 一、什么是git
 
-Git是开源的分布式的管理系统，是由Linux之父——Linus开发的。前期主要用于Linux的版本管理。
+Git是开源的分布式的管理系统，是由Linux之父——Linus开发的。前期主要用于Linux的版本管理。Git基本上是一个内容可寻址的文件系统。
 
 ## 二、Git与其他版本管理工具的区别
 
@@ -19,7 +19,7 @@ Git是开源的分布式的管理系统，是由Linux之父——Linus开发的�
 5. 完整性；Git使用哈希值来标识版本，每一次提交的代码都会计算一个唯一的哈希值，保证了版本的完整性和可追溯性并追踪版本的改变；-------一致性哈希算法
 6. 缓存机制：Git引入了缓存机制，将文件的变化在内存中暂存，只有在需要提交时才会写入磁盘，大大提高了文件的读写效率。-------stage
 
-## 三、 git的基本概念与操作
+## 三、 Git的基本概念
 
 在Git中，根据工作区域可分为：工作目录、暂存区、git仓库、远程仓库；
 
@@ -38,6 +38,10 @@ Git是开源的分布式的管理系统，是由Linux之父——Linus开发的�
 **工作目录的文件生命周期有：untracked、unmodified、modified、staged**
 
 ![image-20240321215213847](https://raw.githubusercontent.com/tiansy9981/pictuer/master/image-20240321215213847.png)
+
+## Git的基本操作
+
+### 1.本地操作
 
 **在git中获取文件状态**
 
@@ -96,6 +100,16 @@ $ git status
 
 通过以上可知，git add命令能跟踪新文件，暂存文件，后面将分支中讲解它能做其他事情，如将合并冲突的文件标记为已解决。
 
+**Git add与commit文件的过程：**
+
+当运行add时，暂存文件计算每个文件的校验和(SHA-1哈希)，将该版本的文件存储在Git存储库中(Git将其称为blob)，并将校验和添加到暂存区域；
+
+当运行git commit创建提交时，git会对每个子目录进行校验和，并将它们作为树对象，存储在git存储库中。然后Git创建一个提交对象，该对象包含元数据和一个指向根项目树的指针，以便在需要时重新创建快照。
+
+![image-20240322105522777](https://raw.githubusercontent.com/tiansy9981/pictuer/master/image-20240322105522777.png)
+
+![image-20240322105542847](https://raw.githubusercontent.com/tiansy9981/pictuer/master/image-20240322105542847.png)
+
 **提交文件至暂存区**
 
 通过git add 可以将文件提交至暂存区。
@@ -110,13 +124,84 @@ $ git status
 
 **文件恢复**
 
+### 远程仓库操作
+
 仓库拉取
 
 仓库推送
 
+标签
+
+## 四、Git分支
+
+Git存储一系列变更集或差异是以==快照==的方式存储。当您进行提交时，Git存储一个提交对象，该对象包含指向所提交内容的快照的指针。这个对象也包含作者姓名和电子邮件地址等其他信息；
+
+Git中的分支只是指向其中一个提交的轻量级可移动指针。
+
+![image-20240322113638111](https://raw.githubusercontent.com/tiansy9981/pictuer/master/image-20240322113638111.png)
+
+创建分支：
 
 
 
+![image-20240322113849649](https://raw.githubusercontent.com/tiansy9981/pictuer/master/image-20240322113849649.png)
+
+Git如何知道你当前在哪个分支上?它保留了一个叫做HEAD的特殊指针。
+
+![image-20240322114023891](https://raw.githubusercontent.com/tiansy9981/pictuer/master/image-20240322114023891.png)
 
 
+
+## 五、Git功能实现原理
+
+### 1、.git目录结构
+
+.git目录，git存储和操作的几乎所有内容都位于此目录。
+
+```bash
+.git% ls -F1                                                                   (git)-[main]
+COMMIT_EDITMSG
+FETCH_HEAD
+HEAD
+ORIG_HEAD
+config
+description
+hooks/
+index
+info/
+logs/
+objects/
+```
+
+config文件包含项目特定的配置选项；
+
+info目录保留了一个全局排除文件，用于您不想在.gitignore文件中跟踪的被忽略的模式。
+
+hooks目录包含客户端或服务器端钩子脚本
+
+objects目录存储数据库的所有内容
+
+Git的核心是一个简单的键值数据存储。这意味着您可以将任何类型的内容插入到Git存储库中，Git将为您提供一个唯一的密钥，您可以稍后使用该密钥检索该内容。git hash-object（有风险，勿试）命令将其存储在.git/objects目录(对象数据库)中，并返回当前引用该数据对象的唯一键。在object目录中子目录用SHA-1的前2个字符命名，文件名是剩下的38个字符。在系统中存储的不是文件名，而是内容。这种对象类型称为blob。
+
+tree对象类型它解决了存储文件名的问题，还允许您将一组文件存储在一起。Git以类似于UNIX文件系统的方式存储内容，但是稍微简化了一些。所有内容都存储为树和blob对象，树对应于UNIX目录条目，blob或多或少对应于索引节点或文件内容。单个树对象包含一个或多个条目，每个条目都是blob或子树的SHA-1哈希值及其相关的模式、类型和文件名
+
+
+
+![image-20240322144828502](https://raw.githubusercontent.com/tiansy9981/pictuer/master/image-20240322144828502.png)
+
+
+
+![image-20240322160757958](https://raw.githubusercontent.com/tiansy9981/pictuer/master/image-20240322160757958.png)
+
+其中id：100644是blob类型，表示是一个普通文件；
+
+160000是commit类型，
+
+040000是tree类型
+
+refs目录存储指向该数据中提交对象的指针(分支、标签、远程等等)
+
+HEAD文件指向当前签出的分支
+
+index文件是Git存储暂存区域信息的地方
 
