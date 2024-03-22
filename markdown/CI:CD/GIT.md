@@ -19,7 +19,68 @@ Git是开源的分布式的管理系统，是由Linux之父——Linus开发的�
 5. 完整性；Git使用哈希值来标识版本，每一次提交的代码都会计算一个唯一的哈希值，保证了版本的完整性和可追溯性并追踪版本的改变；-------一致性哈希算法
 6. 缓存机制：Git引入了缓存机制，将文件的变化在内存中暂存，只有在需要提交时才会写入磁盘，大大提高了文件的读写效率。-------stage
 
-## 三、 Git的基本概念
+## 三、Git功能实现原理
+
+### 1、.git目录结构
+
+.git目录，git存储和操作的几乎所有内容都位于此目录。
+
+```bash
+.git% ls -F1                                                                   (git)-[main]
+COMMIT_EDITMSG
+FETCH_HEAD
+HEAD
+ORIG_HEAD
+config
+description
+hooks/
+index
+info/
+logs/
+objects/
+```
+
+config文件包含项目特定的配置选项；
+
+info目录保留了一个全局排除文件，用于您不想在.gitignore文件中跟踪的被忽略的模式。
+
+hooks目录包含客户端或服务器端钩子脚本
+
+**objects目录存储数据库的所有内容。**
+
+Git的核心是一个简单的键值数据存储。这意味着您可以将任何类型的内容插入到Git存储库中，Git将为您提供一个唯一的密钥---hash值，您可以稍后使用该密钥检索该内容。
+
+在object目录中子目录用SHA-1的前2个字符命名，文件名是剩下的38个字符。
+
+blob对象类型用于存储文件内容，通过git cat-file  -p hash_id即可查看到blob的文件内容。
+
+tree对象类型它解决了存储文件名的问题，还允许您将一组文件存储在一起。Git以类似于UNIX文件系统的方式存储内容，但是稍微简化了一些。所有内容都存储为树和blob对象，树对应于UNIX目录条目，blob或多或少对应于索引节点或文件内容。单个树对象包含一个或多个条目，每个条目都是blob或子树的SHA-1哈希值及其相关的模式、类型和文件名
+
+commit对象类型
+
+
+
+![image-20240322144828502](https://raw.githubusercontent.com/tiansy9981/pictuer/master/image-20240322144828502.png)
+
+
+
+![image-20240322160757958](https://raw.githubusercontent.com/tiansy9981/pictuer/master/image-20240322160757958.png)
+
+其中id：100644是blob类型，表示是一个普通文件；
+
+160000是commit类型，
+
+040000是tree类型
+
+refs目录存储指向该数据中提交对象的指针(分支、标签、远程等等)
+
+HEAD文件指向当前签出的分支
+
+index文件是Git存储暂存区域信息的地方
+
+## 四、 Git的基本概念
+
+### Git的结构
 
 在Git中，根据工作区域可分为：工作目录、暂存区、git仓库、远程仓库；
 
@@ -29,15 +90,20 @@ Git是开源的分布式的管理系统，是由Linux之父——Linus开发的�
 
 ![image-20240321180229680](https://raw.githubusercontent.com/tiansy9981/pictuer/master/image-20240321180229680.png)
 
-**在git中文件有三种状态**：
+### 文件的状态
+
+**在git中文件有四种状态**：
 
 1. 修改modified：已经更改了文件，但尚未将其提交到数据库。
 2. 阶段中staged：已经在当前版本中标记了已修改的文件，以便将其放入下一次提交快照中。
 3. 提交committed：表示数据安全地存储在本地数据库中。
+4. unmodified：文件与仓库、暂存区的内容一致。
 
 **工作目录的文件生命周期有：untracked、unmodified、modified、staged**
 
 ![image-20240321215213847](https://raw.githubusercontent.com/tiansy9981/pictuer/master/image-20240321215213847.png)
+
+#### 分支与标签
 
 ## Git的基本操作
 
@@ -152,56 +218,5 @@ Git如何知道你当前在哪个分支上?它保留了一个叫做HEAD的特殊
 
 
 
-## 五、Git功能实现原理
 
-### 1、.git目录结构
-
-.git目录，git存储和操作的几乎所有内容都位于此目录。
-
-```bash
-.git% ls -F1                                                                   (git)-[main]
-COMMIT_EDITMSG
-FETCH_HEAD
-HEAD
-ORIG_HEAD
-config
-description
-hooks/
-index
-info/
-logs/
-objects/
-```
-
-config文件包含项目特定的配置选项；
-
-info目录保留了一个全局排除文件，用于您不想在.gitignore文件中跟踪的被忽略的模式。
-
-hooks目录包含客户端或服务器端钩子脚本
-
-objects目录存储数据库的所有内容
-
-Git的核心是一个简单的键值数据存储。这意味着您可以将任何类型的内容插入到Git存储库中，Git将为您提供一个唯一的密钥，您可以稍后使用该密钥检索该内容。git hash-object（有风险，勿试）命令将其存储在.git/objects目录(对象数据库)中，并返回当前引用该数据对象的唯一键。在object目录中子目录用SHA-1的前2个字符命名，文件名是剩下的38个字符。在系统中存储的不是文件名，而是内容。这种对象类型称为blob。
-
-tree对象类型它解决了存储文件名的问题，还允许您将一组文件存储在一起。Git以类似于UNIX文件系统的方式存储内容，但是稍微简化了一些。所有内容都存储为树和blob对象，树对应于UNIX目录条目，blob或多或少对应于索引节点或文件内容。单个树对象包含一个或多个条目，每个条目都是blob或子树的SHA-1哈希值及其相关的模式、类型和文件名
-
-
-
-![image-20240322144828502](https://raw.githubusercontent.com/tiansy9981/pictuer/master/image-20240322144828502.png)
-
-
-
-![image-20240322160757958](https://raw.githubusercontent.com/tiansy9981/pictuer/master/image-20240322160757958.png)
-
-其中id：100644是blob类型，表示是一个普通文件；
-
-160000是commit类型，
-
-040000是tree类型
-
-refs目录存储指向该数据中提交对象的指针(分支、标签、远程等等)
-
-HEAD文件指向当前签出的分支
-
-index文件是Git存储暂存区域信息的地方
 
